@@ -1,10 +1,8 @@
-# install-packages.R
-
 install.packages(c(
-"httr"
-"jsonlite"
-"stringr"
-"dplyr"
-"stringdist"
-"httr2"
+  "httr",       # for GitHub API
+  "jsonlite",   # for parsing JSON
+  "stringr",    # for regex extraction
+  "dplyr",      # for data wrangling
+  "stringdist", # for fuzzy matching
+  "httr2"       # for OBIS API
 ))
