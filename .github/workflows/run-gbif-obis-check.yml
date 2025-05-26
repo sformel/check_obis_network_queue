@@ -18,7 +18,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages(c("httr", "jsonlite", "stringr", "robis", "dplyr", "stringdist"))
+          Rscript -e 'install.packages(c("httr", "jsonlite", "stringr", "robis", "dplyr", "stringdist"))'
 
       - name: Run GBIF to OBIS check
         run: Rscript gbif_to_obis_check.R
