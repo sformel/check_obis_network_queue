@@ -4,9 +4,9 @@
 library(httr)
 library(jsonlite)
 library(stringr)
-library(robis)
 library(dplyr)
 library(stringdist)
+library(httr2)
 
 # Get all GitHub issues with pagination
 get_all_issues <- function(owner, repo, token = NULL) {
@@ -43,6 +43,13 @@ get_gbif_titles <- function(keys) {
   na.omit(titles)
 }
 
+# Query OBIS datasets via httr2
+get_obis_titles <- function() {
+  req <- request("https://api.obis.org/v3/dataset") %>% req_perform()
+  res <- resp_body_json(req)
+  sapply(res$results, function(x) x$title)
+}
+
 # Match titles to OBIS dataset titles with exact and fuzzy matching
 match_titles <- function(gbif_titles, obis_titles, max_dist = 5) {
   result <- data.frame(title = gbif_titles, match_type = "no match", stringsAsFactors = FALSE)
@@ -63,15 +70,15 @@ match_titles <- function(gbif_titles, obis_titles, max_dist = 5) {
 }
 
 # Main workflow
-owner <- "iobis"
-repo <- "obis-network-datasets"
+owner <- "your-org"
+repo <- "your-repo"
 token <- Sys.getenv("GITHUB_PAT")
 
 issues <- get_all_issues(owner, repo, token)
 issue_bodies <- sapply(issues, function(x) x$body)
 gbif_keys <- unique(extract_gbif_keys(issue_bodies))
 gbif_titles <- get_gbif_titles(gbif_keys)
-obis_titles <- obis_datasets()$title
+obis_titles <- get_obis_titles()
 result <- match_titles(gbif_titles, obis_titles)
 
 # Save to markdown
