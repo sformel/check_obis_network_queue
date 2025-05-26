@@ -1,4 +1,6 @@
 # gbif_to_obis_check.R
+# co-written with chatGPT
+
 library(httr)
 library(jsonlite)
 library(stringr)
