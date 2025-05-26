@@ -63,8 +63,8 @@ match_titles <- function(gbif_titles, obis_titles, max_dist = 5) {
 }
 
 # Main workflow
-owner <- "your-org"
-repo <- "your-repo"
+owner <- "iobis"
+repo <- "obis-network-datasets"
 token <- Sys.getenv("GITHUB_PAT")
 
 issues <- get_all_issues(owner, repo, token)
