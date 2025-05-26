@@ -9,6 +9,9 @@ jobs:
   run-check:
     runs-on: ubuntu-latest
 
+    env:
+      R_LIBS_USER: ${{ github.workspace }}/.Rlibrary
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,8 +19,19 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-${{ runner.os }}-${{ hashFiles('gbif_to_obis_check.R') }}
+          restore-keys: |
+            r-${{ runner.os }}-
+
       - name: Install required R packages
-        run: Rscript install-packages.R
+        run: |
+          Rscript -e 'install.packages(c(
+            "httr", "jsonlite", "stringr", "dplyr", "stringdist", "httr2"
+          ))'
 
       - name: Run GBIF to OBIS check
         run: Rscript gbif_to_obis_check.R
